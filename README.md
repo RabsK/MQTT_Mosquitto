@@ -1,82 +1,70 @@
-Eclipse Mosquitto
+MQTT Mosquitto for CheriBSD and Ubuntu
 =================
 
-Mosquitto is an open source implementation of a server for version 5.0, 3.1.1,
-and 3.1 of the MQTT protocol. It also includes a C and C++ client library, and
-the `mosquitto_pub` and `mosquitto_sub` utilities for publishing and
-subscribing.
+Message Queuing Telemetry Transport (MQTT) is a lightweight messaging protocol developed for efficient communication in situations with limited bandwidth, high latency, or unreliable networks. It's especially useful in Internet of Things (IoT) and Machine to Mahine (M2M) communication scenarios. MQTT operates on a publish-subscribe model, where devices, called publishers, send messages to a central message broker. Other devices, known as subscribers, can then receive these messages based on their subscriptions to specific topics.
 
-## Links
+Mosquitto, an open-source MQTT broker and client implementation maintained by the Eclipse Foundation, acts as a central hub for MQTT communication, facilitating message exchange between connected devices. Key features of Mosquitto include:
 
-See the following links for more information on MQTT:
+1. Publish-Subscribe Model: Mosquitto enables loosely coupled communication between devices by following the publish-subscribe messaging pattern.
+2. Quality of Service (QoS) Levels: Mosquitto supports multiple QoS levels (0, 1, and 2), providing varying degrees of reliability in message delivery to meet different application needs.
+3. Security Mechanisms: Mosquitto offers authentication mechanisms and encryption options such as TLS/SSL to ensure secure communication between clients and the broker.
+4. Message Persistence: Mosquitto allows messages to be persisted to disk, ensuring that messages are retained even if the broker restarts, thereby enhancing reliability and durability.
+5. Scalability: Designed to be lightweight and scalable, Mosquitto is suitable for deployments ranging from small-scale IoT networks to large-scale enterprise solutions.
+ 
+
+## Resources
+
+Explore the following resources for additional information about MQTT:
 
 - Community page: <http://mqtt.org/>
 - MQTT v3.1.1 standard: <https://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html>
 - MQTT v5.0 standard: <https://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html>
 
-Mosquitto project information is available at the following locations:
-
-- Main homepage: <https://mosquitto.org/>
-- Find existing bugs or submit a new bug: <https://github.com/eclipse/mosquitto/issues>
+Information about the Open Source  Mosquitto can be found at the following sources:
 - Source code repository: <https://github.com/eclipse/mosquitto>
 
-There is also a public test server available at <https://test.mosquitto.org/>
+ ### Build Dependencies
 
-## Installing
+Before getting started, it is recommended to download and install the following; 
 
-See <https://mosquitto.org/download/> for details on installing binaries for
-various platforms.
+cmake, make, xsltproc (Ubuntu), libtool, git, ninja etc.
 
-## Quick start
+##cJSON
 
-If you have installed a binary package the broker should have been started
-automatically. If not, it can be started with a basic configuration:
+If not already installed, it is recommended to install cJSON. The following steps can be used to do so;
+You may use the elevated privileges if needed (sudo) or remove it if not required
 
-    mosquitto
+    sudo git clone https://github.com/DaveGamble/cJSON.git
 
-Then use `mosquitto_sub` to subscribe to a topic:
+Change the directory to cJSON
+    cd cJSON
 
-    mosquitto_sub -t 'test/topic' -v
+Creat a new build directory
+   
+    sudo mkdir build
 
-And to publish a message:
+Change the directory to build
 
-    mosquitto_pub -t 'test/topic' -m 'hello world'
+    cd build
 
-## Documentation
+Run the CMake configuration process with elevated privileges if needed
 
-Documentation for the broker, clients and client library API can be found in
-the man pages, which are available online at <https://mosquitto.org/man/>. There
-are also pages with an introduction to the features of MQTT, the
-`mosquitto_passwd` utility for dealing with username/passwords, and a
-description of the configuration file options available for the broker.
+    sudo cmake ..
 
-Detailed client library API documentation can be found at <https://mosquitto.org/api/>
+Execute the make command with elevated privileges if needed, you may need to use gmake instead of make if using CheirBSD
+    
+    sudo make
 
-## Building from source
+Install the compiled software components into system directories, typically requiring eevated privilages for system-wide access.
 
-To build from source the recommended route for end users is to download the
-archive from <https://mosquitto.org/download/>.
+    sudo make install
 
-On Windows and Mac, use `cmake` to build. On other platforms, just run `make`
-to build. For Windows, see also `README-windows.md`.
+And you are all set :-)
 
-If you are building from the git repository then the documentation will not
-already be built. Use `make binary` to skip building the man pages, or install
-`docbook-xsl` on Debian/Ubuntu systems.
 
-### Build Dependencies
+## Building the MQTT mosquitto code from source
 
-* c-ares (libc-ares-dev on Debian based systems) - only when compiled with `make WITH_SRV=yes`
-* cJSON - for client JSON output support. Disable with `make WITH_CJSON=no` Auto detected with CMake.
-* libwebsockets (libwebsockets-dev) - enable with `make WITH_WEBSOCKETS=yes`
-* openssl (libssl-dev on Debian based systems) - disable with `make WITH_TLS=no`
-* pthreads - for client library thread support. This is required to support the
-  `mosquitto_loop_start()` and `mosquitto_loop_stop()` functions. If compiled
-  without pthread support, the library isn't guaranteed to be thread safe.
-* uthash / utlist - bundled versions of these headers are provided, disable their use with `make WITH_BUNDLED_DEPS=no`
-* xsltproc (xsltproc and docbook-xsl on Debian based systems) - only needed when building from git sources - disable with `make WITH_DOCS=no`
 
-Equivalent options for enabling/disabling features are available when using the CMake build.
 
 
 ## Credits
