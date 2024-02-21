@@ -70,26 +70,26 @@ To clone the repository and access its contents, you can use the following comma
 
 Navigate to the Mosquitto Directory
 
-   cd MQTT_Mosquitto
+    cd MQTT_Mosquitto
 
 Create a directory to build Mosquitto in, with elevated privileges if needed:
 
-   sudo mkdir build
-   cd build
+    sudo mkdir build
+    cd build
 
 Configure the build using CMake. Enable TLS support and disable the generation of documentation, with elevated privileges if needed:
 
 
-   sudo cmake -DWITH_TLS=ON -DDOCUMENTATION=OFF ..
+    sudo cmake -DWITH_TLS=ON -DDOCUMENTATION=OFF ..
 
 Compile Mosquitto by running make or gmake (if make does not work on CheriBSD), with elevated privileges if needed:
 
-   sudo make
+    sudo make
 
 To initiate the Mosquitto MQTT broker, execute the mosquitto executable found in the src directory within the build directory
 
-   cd src
-   ./mosquitto
+    cd src
+    ./mosquitto
 ## Credits
 
 Mosquitto was written by Roger Light <roger@atchoo.org>
