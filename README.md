@@ -29,7 +29,7 @@ Before getting started, it is recommended to download and install the following;
 
 cmake, make, xsltproc (Ubuntu), libtool, git, ninja etc.
 
-##cJSON
+#cJSON
 
 If not already installed, it is recommended to install cJSON. The following steps can be used to do so;
 You may use the elevated privileges if needed (sudo) or remove it if not required
@@ -64,9 +64,32 @@ And you are all set :-)
 
 ## Building the MQTT mosquitto code from source
 
+To clone the repository and access its contents, you can use the following command:
+
+    git clone https://github.com/RabsK/MQTT_Mosquitto.git
+
+Navigate to the Mosquitto Directory
+
+   cd MQTT_Mosquitto
+
+Create a directory to build Mosquitto in, with elevated privileges if needed:
+
+   sudo mkdir build
+   cd build
+
+Configure the build using CMake. Enable TLS support and disable the generation of documentation, with elevated privileges if needed:
 
 
+   sudo cmake -DWITH_TLS=ON -DDOCUMENTATION=OFF ..
 
+Compile Mosquitto by running make or gmake (if make does not work on CheriBSD), with elevated privileges if needed:
+
+   sudo make
+
+To initiate the Mosquitto MQTT broker, execute the mosquitto executable found in the src directory within the build directory
+
+   cd src
+   ./mosquitto
 ## Credits
 
 Mosquitto was written by Roger Light <roger@atchoo.org>
