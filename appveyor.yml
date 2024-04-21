@@ -1,42 +1,30 @@
-name: MQTT Library Build and Deployment
+version: 1.0.{build}
 
-on:
-  push:
-    branches:
-      - main
+image: Visual Studio 2019
 
-jobs:
-  build:
-    runs-on: windows-latest
+environment:
+  matrix:
+    - NODE_VERSION: "20.x"
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+branches:
+  only:
+    - main
 
-      - name: Set up Node.js 20.x
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20.x'
+build_script:
+  - ps: npm install
+  - ps: |
+      mkdir build
+      cd build
+      cmake -DCMAKE_BUILD_TYPE=Release -DWITH_THREADING=no ..
+      cmake --build . --config Release
+      cd ..
 
-      - name: Install dependencies
-        run: npm install
+after_build:
+  - ps: |
+      cd installer
+      "$env:ProgramFiles(x86)\NSIS\makensis" mosquitto.nsi
+      cd ..
 
-      - name: Build with CMake
-        run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DWITH_THREADING=no ..
-          cmake --build . --config Release
-          cd ..
-
-      - name: Create Installer
-        run: |
-          cd installer
-          "%PROGRAMFILES(x86)%\NSIS\makensis" mosquitto.nsi
-        working-directory: installer
-
-      - name: Upload Installer Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Installer
-          path: 'installer/mosquitto-*-install-windows-x86.exe'
+artifacts:
+  - path: 'installer/mosquitto-*-install-windows-x86.exe'
+    name: Installer
