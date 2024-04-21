@@ -32,32 +32,8 @@ cmake, make, xsltproc (Ubuntu), libtool, git, ninja etc.
 #cJSON
 
 If not already installed, it is recommended to install cJSON. The following steps can be used to do so;
-You may use the elevated privileges if needed (sudo) or remove it if not required
-
-    sudo git clone https://github.com/DaveGamble/cJSON.git
-
-Change the directory to cJSON
-    cd cJSON
-
-Creat a new build directory
-   
-    sudo mkdir build
-
-Change the directory to build
-
-    cd build
-
-Run the CMake configuration process with elevated privileges if needed
-
-    sudo cmake ..
-
-Execute the make command with elevated privileges if needed, you may need to use gmake instead of make if using CheirBSD
-    
-    sudo make
-
-Install the compiled software components into system directories, typically requiring eevated privilages for system-wide access.
-
-    sudo make install
+You may use the elevated privileges if needed (sudo) or remove it if not required (sudo git clone https://github.com/DaveGamble/cJSON.git). 
+Change the directory to cJSON (cd cJSON), creat a new build directory (sudo mkdir build), change the directory to build (cd build), run the CMake configuration process with elevated privileges if needed (sudo cmake ..), execute the make command with elevated privileges if needed, you may need to use gmake instead of make if using CheirBSD (sudo make) then install the compiled software components into system directories, typically requiring eevated privilages for system-wide access (sudo make install).
 
 And you are all set :-)
 
