@@ -1,33 +1,42 @@
-os: Visual Studio 2015
+name: MQTT Library Build and Deployment
 
-environment:
-  CMAKE_ARGS: -DCMAKE_BUILD_TYPE=Release
+on:
+  push:
+    branches:
+      - main
 
-configuration:
-  - Release
+jobs:
+  build:
+    runs-on: windows-latest
 
-install:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-build:
+      - name: Set up Node.js 20.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.x'
 
-build_script:
-  - md build
-  - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Release -DWITH_THREADING=no ..
-  - cmake --build . --config Release
-  - cd ..
+      - name: Install dependencies
+        run: npm install
 
-after_build:
-  - cd installer
-  - '"%PROGRAMFILES(x86)%\NSIS\makensis" mosquitto.nsi'
+      - name: Build with CMake
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DWITH_THREADING=no ..
+          cmake --build . --config Release
+          cd ..
 
-artifacts:
-  - name: Installer
-    path: 'installer/mosquitto-*-install-windows-x86.exe'
-  #- path: build\src\Release\mosquitto.exe
-  #- path: build\src\Release\mosquitto_passwd.exe
-  #- path: build\lib\Release\mosquitto.dll
-  #- path: build\lib\Release\mosquitto.lib
-  #- path: build\client\Release\mosquitto_pub.exe
-  #- path: build\client\Release\mosquitto_sub.exe
-  #- path: build\src\Release\mosquitto.exe
+      - name: Create Installer
+        run: |
+          cd installer
+          "%PROGRAMFILES(x86)%\NSIS\makensis" mosquitto.nsi
+        working-directory: installer
+
+      - name: Upload Installer Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Installer
+          path: 'installer/mosquitto-*-install-windows-x86.exe'
