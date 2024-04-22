@@ -9,6 +9,8 @@
 # the `language` matrix defined below to confirm you have the correct set of
 # supported CodeQL languages.
 
+
+
 name: "CodeQL"
 
 on:
@@ -45,26 +47,16 @@ jobs:
 
     - run: sudo apt-get update && sudo apt-get install -y gcc g++ git libssl-dev
 
-    - run: |
-        git clone https://github.com/DaveGamble/cJSON /tmp/cJSON
-        wget https://github.com/DaveGamble/cJSON/archive/v1.7.14.tar.gz -O /tmp/cjson.tar.gz
-        mkdir -p /tmp/build/cjson
-        tar --strip=1 -xf /tmp/cjson.tar.gz -C /tmp/build/cjson
-        rm /tmp/cjson.tar.gz
-        cd /tmp/build/cjson && cmake .  -DCMAKE_BUILD_TYPE=MinSizeRel -DCJSON_BUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/usr
-        sudo make -C /tmp/build/cjson install
+    # Run additional setup steps if needed for your specific project here
 
-    - run: make binary
-
-    - name: Perform CodeQL Analysis
+    - name: Perform CodeQL Analysis for CPP
+      if: matrix.language == 'cpp'
       uses: github/codeql-action/analyze@v2
+      with:
+        languages: cpp
 
-  cjson:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Use Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      # Add other steps for the cjson job here
+    - name: Perform CodeQL Analysis for Python
+      if: matrix.language == 'python'
+      uses: github/codeql-action/analyze@v2
+      with:
+        languages: python
