@@ -11,7 +11,6 @@
 
 
 
-
 name: "CodeQL"
 
 on:
@@ -47,6 +46,8 @@ jobs:
         languages: ${{ matrix.language }}
 
     - run: sudo apt-get update && sudo apt-get install -y gcc g++ git libssl-dev
+
+    # Add build command here if necessary
 
     - name: Perform CodeQL Analysis for CPP
       if: matrix.language == 'cpp'
