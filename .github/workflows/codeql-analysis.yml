@@ -47,8 +47,6 @@ jobs:
 
     - run: sudo apt-get update && sudo apt-get install -y gcc g++ git libssl-dev
 
-    # Run additional setup steps if needed for your specific project here
-
     - name: Perform CodeQL Analysis for CPP
       if: matrix.language == 'cpp'
       uses: github/codeql-action/analyze@v2
