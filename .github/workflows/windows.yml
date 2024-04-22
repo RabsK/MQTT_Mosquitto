@@ -18,33 +18,22 @@ jobs:
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v3
-        with:
-          repository: DaveGamble/cJSON
-          ref: v1.7.15
-
       - name: Use Node.js 20
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-
       - name: Configure CMake cJSON
         run: cmake -B ${{github.workspace}}/build64 -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DENABLE_CJSON_TEST=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_SHARED_AND_STATIC_LIBS=OFF -DCJSON_BUILD_SHARED_LIBS=OFF -DCJSON_OVERRIDE_BUILD_SHARED_LIBS=OFF -DCMAKE_GENERATOR_PLATFORM=x64
-
       # Add other steps for the cJSON job here
 
   mosquitto:
     runs-on: windows-2022
     needs:
       - cjson
-    env:
-      CJSON_DIR: C:\Program Files\cJSON
-
     steps:
       - uses: actions/checkout@v3
-
       - name: Use Node.js 20
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-
       # Add other steps for the mosquitto job here
