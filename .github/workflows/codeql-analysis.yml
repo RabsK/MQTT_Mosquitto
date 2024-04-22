@@ -15,7 +15,6 @@ on:
   push:
     branches: [ master, fixes, develop, 1.6.x ]
   pull_request:
-    # The branches below must be a subset of the branches above
     branches: [ master ]
   schedule:
     - cron: '44 18 * * 1'
@@ -29,55 +28,28 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'cpp', 'python' ]
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
-        # Learn more:
-        # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
+      uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
-        # If you wish to specify custom queries, you can do so here or in a config file.
-        # By default, queries listed here will override any specified in a config file.
-        # Prefix the list here with "+" to use these queries and those in the config file.
-        # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
-    # Command-line programs to run using the OS shell.
     - run: sudo apt-get update && sudo apt-get install -y gcc g++ git libssl-dev
 
-    # Install cJSON
-    - run: git clone https://github.com/DaveGamble/cJSON /tmp/cJSON
-    - run: wget https://github.com/DaveGamble/cJSON/archive/v1.7.14.tar.gz -O /tmp/cjson.tar.gz
-    - run: mkdir -p /tmp/build/cjson
-    - run: tar --strip=1 -xf /tmp/cjson.tar.gz -C /tmp/build/cjson
-    - run: rm /tmp/cjson.tar.gz
-    - run: cd /tmp/build/cjson && cmake .  -DCMAKE_BUILD_TYPE=MinSizeRel -DCJSON_BUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/usr
-    - run: sudo make -C /tmp/build/cjson install
+    - run: |
+        git clone https://github.com/DaveGamble/cJSON /tmp/cJSON
+        wget https://github.com/DaveGamble/cJSON/archive/v1.7.14.tar.gz -O /tmp/cjson.tar.gz
+        mkdir -p /tmp/build/cjson
+        tar --strip=1 -xf /tmp/cjson.tar.gz -C /tmp/build/cjson
+        rm /tmp/cjson.tar.gz
+        cd /tmp/build/cjson && cmake .  -DCMAKE_BUILD_TYPE=MinSizeRel -DCJSON_BUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/usr
+        sudo make -C /tmp/build/cjson install
 
-    # Now build Mosquitto
     - run: make binary
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
-
-    # Set up Node.js 20.x
-    - name: Set up Node.js 20.x
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20.x'
-
-    # Install dependencies
-    - name: Install dependencies
-      run: npm install
-
-    # Upload artifacts
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: cjson-bin
-        path: C:\Program Files\cJSON
+      uses: github/codeql-action/analyze@v2
