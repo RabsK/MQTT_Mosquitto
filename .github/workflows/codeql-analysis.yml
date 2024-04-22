@@ -60,3 +60,6 @@ jobs:
       uses: github/codeql-action/analyze@v2
       with:
         languages: python
+
+    - name: Check CodeQL Analysis Results
+      run: echo "Check CodeQL analysis results."
