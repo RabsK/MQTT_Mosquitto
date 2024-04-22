@@ -8,7 +8,7 @@
 # We have attempted to detect the languages in your repository. Please check
 # the `language` matrix defined below to confirm you have the correct set of
 # supported CodeQL languages.
-#
+
 name: "CodeQL"
 
 on:
@@ -35,7 +35,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -47,10 +47,9 @@ jobs:
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 https://git.io/JvXDl
-
+    # Command-line programs to run using the OS shell.
     - run: sudo apt-get update && sudo apt-get install -y gcc g++ git libssl-dev
+
     # Install cJSON
     - run: git clone https://github.com/DaveGamble/cJSON /tmp/cJSON
     - run: wget https://github.com/DaveGamble/cJSON/archive/v1.7.14.tar.gz -O /tmp/cjson.tar.gz
@@ -65,3 +64,20 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+
+    # Set up Node.js 20.x
+    - name: Set up Node.js 20.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20.x'
+
+    # Install dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # Upload artifacts
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: cjson-bin
+        path: C:\Program Files\cJSON
